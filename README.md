@@ -58,14 +58,15 @@ The Mean Squared Error (MSE) metric was chosen for training, being highly sensit
 - Weight decay selection and final training
 All experiments and models were tracked with MLflow.<br/>
 Champion model architecture:
-'''
+
+```
 nn.Conv2d(1, 33, kernel_size=(2, 15), padding=(0, 7)),                     
 nn.ReLU(),
 nn.Conv2d(33, 1, kernel_size=(1, 1)), 
 nn.Linear(115, 40),   
 nn.ReLU(),
 nn.Linear(40, 1)
-'''
+```
 The best model achieved MSE 4.8862 and MAE 1.1665 on validation set.
 <p align="center">
 <img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/4.png"/>
