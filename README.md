@@ -1,11 +1,11 @@
 # Gearbox Speed Estimation via Vibration Analysis
-This repository implements a machine-learning model for estimation of shaft rotational speed by analyzing two-axis accelerometer vibration measurements. Raw vibration data is converted to the frequency domain via Fast Fourier Transform(FFT) and subsequently processed by a PyTorch convolutional neural network(CNN), achieving a mean absolute error(MAE) of 1.17 on hold-out data. By eliminating the need for dedicated tachometers, this tachometer-less solution delivers cost-effective, non-intrusive speed monitoring for legacy industrial machinery.
+This repository presents a machine-learning model for estimating shaft rotational speed from two-axis accelerometer vibration measurements. Raw time-domain vibration signals are transformed into the frequency domain via Fast Fourier Transform(FFT) and subsequently processed by a PyTorch convolutional neural network(CNN). The final model achieves a mean absolute error (MAE) of 1.17rps on hold-out data. By eliminating the need for dedicated tachometers, this tachometer-less approach offers cost-effective, non-intrusive speed monitoring for legacy industrial machinery.
 
 ### Objective
-Develop a neural network that predicts rotational speed by analyzing raw vibration signals.
+Develop a neural network that predicts rotational speed from raw vibration signals.
 
 ### Data
-[Mechanical Gear Vibration Dataset](https://www.kaggle.com/datasets/hieudaotrung/gear-vibration/data) was used for this project. It contains 36 time serieses(runs), representing shaft vibration readings along two axis for six different gear faults under two loads and at three speeds.
+[Mechanical Gear Vibration Dataset](https://www.kaggle.com/datasets/hieudaotrung/gear-vibration/data) was used for this project. It contains 36 time series(runs), representing shaft vibration readings along two axis for six different gear faults under two loads and at three speeds.
 <details>
 <summary>columns description</summary>
 
@@ -18,9 +18,9 @@ Develop a neural network that predicts rotational speed by analyzing raw vibrati
 </details>
 
 ### Key Features
-- **EDA**: Great Expectations, Autocorrelation, MSTL, FFT.
-- **Data Preparation**: FFT, Custom Oversampling.
-- **Model Development**: PyTorch, MLflow, Early Stopping, Learning Rate Scheduling, CNN.
+- **EDA**: Great Expectations, autocorrelation analysis, MSTL decomposition, FFT visualizations
+- **Data Preparation**: FFT extraction, sliding-window segmentation, custom oversampling
+- **Model Development**: PyTorch CNN, MLflow experiment tracking, early stopping, learning rate scheduling
 
 ### Project Flow
 1. [Exploratory Data Analysis](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#1-exploratory-data-analysis)
@@ -30,21 +30,21 @@ Develop a neural network that predicts rotational speed by analyzing raw vibrati
 
 ### 1. Exploratory Data Analysis
 The dataset has data as per description, without missed values. Each gearbox run has 25000 samples and was performed in different time, resulting in non-overlapping readings time that can be used as index in time series. The dataset provides axial and radial shaft vibration readings.<br/>
-The readings exhibit a visible trend, possibly due to the gearbox not being fully warmed up before measurements. The data shows multiple seasonal patterns with non linear behavior, which together with hight noise levels suggest multiple resonting components in the system. Each gear fault produces a unique vibration signature.<br/>
+The readings exhibit a visible trend, possibly due to the gearbox not being fully warmed up before measurements. The data shows multiple seasonal patterns with non linear behavior, which together with high noise levels suggest multiple resonting components in the system. Each gear fault produces a unique vibration signature.<br/>
 Frequency-domain plots provide the clearest differentiation between runs.
 <p align="center">
-<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/1.png"/>
+<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/1.png" alt="Frequency‑domain comparison of gearbox runs"/>
 </p>
 
 ### 2. Data Preparation
 The dataset is relatively small compared to complexity of the system. Thus, the primary data preparation challenge was maximizing the number of usable samples.<br/>
-As EDA showed, the most informative representation was the 0–50 Hz band of the FFT, which became the basis for feature extraction. The minimal number of sensor readings needed to form a recognizable spectrum was determined to be 12500. Then, a moving window method with a step of 100 samples was applied to each run to create multiple spectrums.
+As EDA showed, the most informative representation was the 0–50 Hz band of the FFT, which became the basis for feature extraction. The minimal number of sensor readings needed to form a recognizable spectrum was determined to be 12500. Then, a moving window method with a step of 100 samples was applied to each run to create multiple spectra.
 <p align="center">
-<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/2.png"/>
+<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/2.png" alt="Windowed FFT spectra"/>
 </p>
-Since the number of spectrums was still insufficient for model training, synthetic augmentation was applied. Synthetic spectrums were generated by shifting values in the FFT array and filling gaps with noise, significantly increasing the available training data.
+Since the number of spectra was still insufficient for model training, synthetic augmentation was applied. Synthetic spectra were generated by shifting values in the FFT array and filling gaps with noise, significantly increasing the available training data.
 <p align="center">
-<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/3.png"/>
+<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/3.png" alt="Synthetic FFT spectra"/>
 </p>
 
 ### 3. Model training
@@ -52,10 +52,12 @@ The data was split into three sets:
 - Train(synthetic data)
 - Test(real data, excluding validation samples)
 - Validation(real unseen data)
+  
 The Mean Squared Error (MSE) metric was chosen for training, being highly sensitive to large errors. Training was performed in three phases:
-- Architecture search
-- Layer configuration tuning
-- Weight decay selection and final training
+1. Architecture search
+2. Layer configuration tuning
+3. Weight decay selection and final training
+  
 All experiments and models were tracked with MLflow.<br/>
 Champion model architecture:
 
@@ -67,11 +69,10 @@ nn.Linear(115, 40),
 nn.ReLU(),
 nn.Linear(40, 1)
 ```
-The best model achieved MSE 4.8862 and MAE 1.1665 on validation set.
+The best model achieved MSE 4.8862 and MAE 1.1665 on validation set. As expected, performance on validation set is worse than on test. 8 and 25 rps have predictions nearly as good as for test dataset. 40 rps samples have bigger errors, which can be explained by not exactly well selected run as source and thus, result suffers from unrecognised features of this spectrum.
 <p align="center">
-<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/4.png"/>
+<img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/4.png"  alt="Prediction errors distribution"/>
 </p>
 
 ### 4. Conclusion
-The best performing model reached MSE 4.8862 and MAE 1.1665, corresponding to 3.65% of the prediction range. All trained models and training process loss values were logged with MLflow, enabling future reproducibility and model comparisons.<br/>
-During architecture selection and training, the trained models demonstrated high sensitivity to batch size. Best result, that was achieved with batch size 20(5 more, than used in final experiments series) was MSE ~16, when best result of 100 batch size was MSE ~49. This can be explained by low data diversity, specifically peaks configurations.
+In closing, this project validates that a concise PyTorch CNN, fed with thoughtfully preprocessed FFT spectra, can accurately infer gearbox rotational speed without any physical tachometer, achieving an MAE of just 1.17 rps(~3.65% of the operating range) on small amount of available data. All experiments are fully tracked in MLflow, ensuring reproducibility and transparency of model development. Along the way, we uncovered that training hyperparameters, especially batch size, have a pronounced effect on performance, underscoring the importance of systematic tuning and robust cross‑validation.
