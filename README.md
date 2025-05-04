@@ -1,3 +1,7 @@
+[![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) | MIT License |
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
+[![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=fff)](#)
+
 # Gearbox Speed Estimation via Vibration Analysis
 This repository presents a machine-learning model for estimating shaft rotational speed from two-axis accelerometer vibration measurements. Raw time-domain vibration signals are transformed into the frequency domain via Fast Fourier Transform(FFT) and subsequently processed by a PyTorch convolutional neural network(CNN). The final model achieves a mean absolute error (MAE) of 1.17rps on hold-out data. By eliminating the need for dedicated tachometers, this tachometer-less approach offers cost-effective, non-intrusive speed monitoring for legacy industrial machinery.
 
