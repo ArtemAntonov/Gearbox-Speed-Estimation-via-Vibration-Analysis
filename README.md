@@ -1,4 +1,4 @@
-[![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) | MIT License |
+[![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
 [![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=fff)](#)
 
