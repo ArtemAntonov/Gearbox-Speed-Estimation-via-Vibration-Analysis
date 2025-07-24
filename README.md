@@ -30,7 +30,8 @@ Develop a neural network that predicts rotational speed from raw vibration signa
 1. [Exploratory Data Analysis](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#1-exploratory-data-analysis)
 2. [Data Preparation](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#2-data-preparation)
 3. [Model training](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#3-model-training)
-4. [Conclusion](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#4-conclusion)
+4. [Model Deployment](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#4-Model-Deployment)
+5. [Conclusion](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#5-conclusion)
 
 ### 1. Exploratory Data Analysis
 The dataset has data as per description, without missed values. Each gearbox run has 25000 samples and was performed in different time, resulting in non-overlapping readings time that can be used as index in time series. The dataset provides axial and radial shaft vibration readings.<br/>
@@ -78,5 +79,27 @@ The best model achieved MSE 4.8862 and MAE 1.1665 on validation set. As expected
 <img src="https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/blob/main/img/4.png"  alt="Prediction errors distribution"/>
 </p>
 
-### 4. Conclusion
+### 4. Model Deployment
+
+To make the model accessible via API, the project was extended with a FastAPI application, containerized using Docker.
+
+The FastAPI app is located in the deployment/ folder.
+Input: JSON with sensor1_sensor2 parameter - list of pairs of readings [sensor1, sensor2]
+Output: Predicted speed of the shaft
+
+To ensure portability and ease of deployment, the API is packaged in a Docker container and available on Docker Hub.
+Pull and run the container:
+
+```
+docker pull artemantonovdocker/gearbox-speed-estimation-via-vibration-analysis:latest
+docker run -d -p 8000:8000 artemantonovdocker/gearbox-speed-estimation-via-vibration-analysis:latest
+```
+Once running, the API will be accessible at:<br/>
+👉 http://localhost:8000
+
+Interactive API documentation (with sample requests) is available at:<br/>
+👉 http://localhost:8000/docs
+Note: loading request samples takes some time.
+
+### 5. Conclusion
 In closing, this project validates that a concise PyTorch CNN, fed with thoughtfully preprocessed FFT spectra, can accurately infer gearbox rotational speed without any physical tachometer, achieving an MAE of just 1.17 rps(~3.65% of the operating range) on small amount of available data. All experiments are fully tracked in MLflow, ensuring reproducibility and transparency of model development. Along the way, we uncovered that training hyperparameters, especially batch size, have a pronounced effect on performance, underscoring the importance of systematic tuning and robust cross‑validation.
