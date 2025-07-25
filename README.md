@@ -29,7 +29,7 @@ Develop a neural network that predicts rotational speed from raw vibration signa
 - **Data Preparation**: FFT extraction, sliding-window segmentation, custom oversampling
 - **Model Development**: PyTorch CNN, MLflow experiment tracking, early stopping, learning rate scheduling
 - **Deployment-ready API:** Speed estimation via a FastAPI-based REST API
-- **Containerization:** Docker image for easy setup and cross-platform portability.
+- **Containerization:** Docker image for easy setup and cross-platform portability
 
 ### Project Flow
 1. [Exploratory Data Analysis](https://github.com/ArtemAntonov/Gearbox-Speed-Estimation-via-Vibration-Analysis/#1-exploratory-data-analysis)
