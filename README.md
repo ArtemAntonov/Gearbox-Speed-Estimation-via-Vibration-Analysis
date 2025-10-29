@@ -1,6 +1,7 @@
 [![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
 [![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=fff)](#)
+[![Hugging Face Space](https://img.shields.io/badge/HuggingFace-Demo-yellow?logo=huggingface)](https://artem-antonov-gearbox-speed-estimation-via-vibra-d21c19a.hf.space/docs)
 
 # Gearbox Speed Estimation via Vibration Analysis
 ### Project Overview
@@ -10,6 +11,13 @@ The model is exposed as REST API using FastAPI. The API is conteinerized with Do
 
 ### Objective
 Develop a neural network that predicts rotational speed from raw vibration signals.
+
+### Demo/API Access
+You can try the model or access the API hosted on **Hugging Face Spaces**:<br/>
+👉 [Live API on Hugging Face](https://artem-antonov-gearbox-speed-estimation-via-vibra-d21c19a.hf.space)
+
+The API is built with **FastAPI**, and you can view the interactive Swagger docs here:<br/>
+👉 [API Docs (Swagger UI)](https://artem-antonov-gearbox-speed-estimation-via-vibra-d21c19a.hf.space/docs)
 
 ### Data
 [Mechanical Gear Vibration Dataset](https://www.kaggle.com/datasets/hieudaotrung/gear-vibration/data) was used for this project. It contains 36 time series(runs), representing shaft vibration readings along two axis for six different gear faults under two loads and at three speeds.
